@@ -1,11 +1,14 @@
 package kz.iitu.springlab;
 
+import kz.iitu.springlab.config.AppProperties; // Импорт вашего AppProperties
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
+import org.springframework.boot.context.properties.EnableConfigurationProperties; // Импорт аннотации
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 
 @SpringBootApplication
-@ConfigurationPropertiesScan
+@EnableConfigurationProperties(AppProperties.class) // <--- Добавьте эту строку
+@EnableAspectJAutoProxy(exposeProxy = true, proxyTargetClass = true)
 public class SpringLab01Application {
 
 	public static void main(String[] args) {

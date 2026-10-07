@@ -35,6 +35,11 @@ public class CatalogController {
         return catalogService.remove(id);
     }
 
+    @GetMapping("/test-retry")
+    public String testRetry() {
+        return catalogService.retryTest();
+    }
+
     @GetMapping("/api/lab4/proxy")
     public Map<String, String> proxyInfo() {
         return Map.of(

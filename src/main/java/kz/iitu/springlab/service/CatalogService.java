@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.IntStream;
 import java.util.concurrent.atomic.AtomicInteger;
+import org.springframework.aop.framework.AopContext;
+
 
 
 
@@ -29,6 +31,7 @@ public class CatalogService {
     }
 
     @Audited(action = "CATALOG_REMOVE")
+    @RetryOnFailure(attempts = 3)
     public String remove(long id) {
         if (id <= 0) {
             throw new IllegalArgumentException("Invalid identifier: " + id);
@@ -38,8 +41,9 @@ public class CatalogService {
 
     // Task 4: самовызов
     public String removeTwice(long id) {
-        String first  = remove(id);
-        String second = remove(id + 1);
+        CatalogService proxy = (CatalogService) AopContext.currentProxy();
+        String first = proxy.remove(id);
+        String second = proxy.remove(id + 1);
         return first + "; " + second;
     }
 
@@ -56,5 +60,9 @@ public class CatalogService {
     private void sleep(long ms) {
         try { Thread.sleep(ms); }
         catch (InterruptedException e) { Thread.currentThread().interrupt(); }
+    }
+    @RetryOnFailure(attempts = 3)
+    public String retryTest() {
+        throw new RuntimeException("Test failure for retry");
     }
 }
